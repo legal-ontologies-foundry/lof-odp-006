@@ -1,0 +1,12 @@
+# CQ4. What is the status of each conflict: settled with legal force, held
+# only by readings without force, contested, or unresolved?
+PREFIX lof: <https://w3id.org/lof/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?content ?otherContent ?status WHERE {
+  ?a lof:ODP006_0001105 ?b . ?a rdfs:label ?content . ?b rdfs:label ?otherContent .
+  FILTER(STR(?a) < STR(?b))
+  BIND(IF(EXISTS { ?a lof:ODP006_0001109 ?b } && EXISTS { ?b lof:ODP006_0001109 ?a }, "contested",
+       IF(EXISTS { ?a lof:ODP006_0001113 ?b } || EXISTS { ?b lof:ODP006_0001113 ?a }, "settled with legal force",
+       IF(EXISTS { ?a lof:ODP006_0001109 ?b } || EXISTS { ?b lof:ODP006_0001109 ?a }, "held only by readings without force",
+          "unresolved"))) AS ?status)
+} ORDER BY ?status ?content

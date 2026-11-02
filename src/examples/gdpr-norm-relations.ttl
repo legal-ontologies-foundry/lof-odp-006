@@ -1,0 +1,152 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix lof: <https://w3id.org/lof/> .
+@prefix ex: <https://example.org/norms/> .
+
+# Worked example for LOF-ODP-006.
+# Real: Regulation (EU) 2016/679 (GDPR) Arts 6(1)(f), 7, 9(1), 15, 88, 89(2) and
+# Recital 173; Directive 2002/58/EC (ePrivacy) Art 5(3); German BDSG ss 26(2),
+# 27(2); German TDDDG s 25; EDPB Opinion 5/2019; Cases 6/64 Costa v ENEL and
+# 106/77 Simmenthal; Case C-162/97 Nilsson (recitals have no binding legal force).
+# Hypothetical: the website operator, the municipality, its ordinance, the
+# administrative court's judgment, and provisions A to D at the end.
+<https://w3id.org/lof/odp-006/examples/gdpr-norm-relations.ttl> a owl:Ontology ;
+  owl:imports <https://w3id.org/lof/odp-006.owl> .
+
+## Legal content
+
+ex:gdprArt6_1f a lof:ODP001_0001001 ; rdfs:label "GDPR Article 6(1)(f), legitimate interests" .
+ex:gdprArt7 a lof:ODP001_0001001 ; rdfs:label "GDPR Article 7, conditions for consent" .
+ex:gdprArt9_1 a lof:ODP001_0001001 ; rdfs:label "GDPR Article 9(1), special categories" .
+ex:gdprArt15 a lof:ODP001_0001001 ; rdfs:label "GDPR Article 15, right of access" .
+ex:gdprArt88 a lof:ODP001_0001001 ; rdfs:label "GDPR Article 88, processing in employment" .
+ex:gdprArt89_2 a lof:ODP001_0001001 ; rdfs:label "GDPR Article 89(2), derogations for research" .
+ex:eprivacy5_3 a lof:ODP001_0001001 ; rdfs:label "ePrivacy Directive Article 5(3), storing information in terminal equipment" .
+ex:tdddg25 a lof:ODP001_0001001 ; rdfs:label "TDDDG section 25, consent for terminal equipment (transposing ePrivacy Article 5(3))" .
+ex:bdsg26_2 a lof:ODP001_0001001 ; rdfs:label "BDSG section 26(2), consent in employment" .
+ex:bdsg27_2 a lof:ODP001_0001001 ; rdfs:label "BDSG section 27(2), limits on data subject rights for research" .
+ex:ordinance a lof:ODP001_0001001 ; rdfs:label "municipal ordinance on publishing benefit recipients' health status (hypothetical)" .
+
+# A recital is part of the act but has no binding legal force (C-162/97
+# Nilsson, para 54), so it is information content, not legal content.
+ex:gdprRecital173 a obo:BFO_0000031 ; rdfs:label "GDPR Recital 173, relationship with Directive 2002/58/EC" .
+
+## Particularization and derogation, with the authorization recorded in LOF-ODP-001
+
+ex:bundestag a obo:BFO_0000040 ; rdfs:label "German Bundestag" .
+ex:bdsgEnactment a lof:ODP001_0001003 ;                      # enactment
+  rdfs:label "enactment of the BDSG 2018" ;
+  obo:BFO_0000057 ex:bundestag ;
+  lof:ODP001_0001100 ex:bdsg26_2 , ex:bdsg27_2 ;               # establishes
+  lof:ODP001_0001102 ex:gdprArt88 , ex:gdprArt89_2 .          # performed under
+
+# Section 26(2) adds employment-specific conditions to consent. Whether section
+# 26(1) is a valid Article 88 rule is doubtful after Case C-34/21
+# (Hauptpersonalrat, 30 March 2023), which held that a rule merely restating
+# the GDPR is not one; this example does not rely on 26(1).
+ex:bdsg26_2 lof:ODP006_0001100 ex:gdprArt7 .                   # particularizes
+
+# Blocking derogation, permitted by Article 89(2). Derogation does not imply
+# that section 27(2) prevails over the GDPR.
+ex:bdsg27_2 lof:ODP006_0001103 ex:gdprArt15 .                  # creates exception to
+
+## Conflict 1 (lex specialis): cookies on a website. Resolved only by readings
+## without legal force.
+
+ex:shop a obo:BFO_0000040 ; rdfs:label "Example Shop GmbH" .
+ex:visitor a obo:BFO_0000040 ; rdfs:label "a website visitor" .
+
+ex:consentDuty a lof:ODP003_0001002 ;                         # duty
+  rdfs:label "duty to obtain consent before storing non-essential cookies" ;
+  lof:ODP003_0001100 ex:shop ;
+  lof:ODP003_0001101 ex:tdddg25 , ex:eprivacy5_3 ;             # grounded in
+  lof:ODP003_0001102 ex:consentClaim .
+ex:consentClaim a lof:ODP003_0001001 ;
+  rdfs:label "visitor's claim that no non-essential cookie be stored without consent" ;
+  lof:ODP003_0001100 ex:visitor ; lof:ODP003_0001101 ex:tdddg25 , ex:eprivacy5_3 .
+
+ex:interestLiberty a lof:ODP003_0001003 ;                      # liberty
+  rdfs:label "liberty to process personal data on legitimate interests" ;
+  lof:ODP003_0001100 ex:shop ; lof:ODP003_0001101 ex:gdprArt6_1f ;
+  lof:ODP003_0001102 ex:interestNoClaim ;
+  lof:ODP006_0001104 ex:consentDuty .                          # conflicts with
+ex:interestNoClaim a lof:ODP003_0001004 ;
+  rdfs:label "visitor's no-claim against processing on legitimate interests" ;
+  lof:ODP003_0001100 ex:visitor ; lof:ODP003_0001101 ex:gdprArt6_1f .
+
+ex:recitalDetermination a lof:ODP006_0001001 ;
+  rdfs:label "Recital 173: the GDPR does not add obligations where ePrivacy sets specific ones with the same objective" ;
+  lof:ODP006_0001106 ex:eprivacy5_3 ;                          # favours
+  lof:ODP006_0001107 ex:gdprArt6_1f ;                          # disfavours
+  lof:ODP006_0001108 lof:ODP006_0001501 ;                      # on the ground of: lex specialis
+  lof:ODP006_0001110 ex:gdprRecital173 .                       # stated in
+
+ex:edpbOpinion a obo:BFO_0000031 ; rdfs:label "EDPB Opinion 5/2019 on the interplay between ePrivacy and the GDPR" .
+ex:edpbDetermination a lof:ODP006_0001001 ;                    # guidance, not legal content
+  rdfs:label "EDPB: national ePrivacy consent rules such as TDDDG section 25 displace Article 6 for storing information" ;
+  lof:ODP006_0001106 ex:tdddg25 ; lof:ODP006_0001107 ex:gdprArt6_1f ;
+  lof:ODP006_0001108 lof:ODP006_0001501 ;
+  lof:ODP006_0001110 ex:edpbOpinion .
+
+## Conflict 2 (primacy of EU law): a municipal ordinance against Article 9(1).
+## An annotator's reading, then a court's authoritative holding.
+
+ex:municipality a obo:BFO_0000040 ; rdfs:label "Example Municipality (hypothetical)" .
+ex:residents a obo:BFO_0000040 ; rdfs:label "benefit recipients" .
+
+ex:publishDuty a lof:ODP003_0001002 ;
+  rdfs:label "municipality's duty to publish recipients' health status" ;
+  lof:ODP003_0001100 ex:municipality ; lof:ODP003_0001101 ex:ordinance ;
+  lof:ODP003_0001102 ex:publishClaim ;
+  lof:ODP006_0001104 ex:refrainDuty .
+ex:publishClaim a lof:ODP003_0001001 ;
+  rdfs:label "claim to publication of recipients' health status" ;
+  lof:ODP003_0001100 ex:residents ; lof:ODP003_0001101 ex:ordinance .
+ex:refrainDuty a lof:ODP003_0001002 ;
+  rdfs:label "municipality's duty to refrain from processing health data" ;
+  lof:ODP003_0001100 ex:municipality ; lof:ODP003_0001101 ex:gdprArt9_1 ;
+  lof:ODP003_0001102 ex:refrainClaim .
+ex:refrainClaim a lof:ODP003_0001001 ;
+  rdfs:label "recipients' claim that their health data not be processed" ;
+  lof:ODP003_0001100 ex:residents ; lof:ODP003_0001101 ex:gdprArt9_1 .
+
+ex:annotation a obo:BFO_0000031 ; rdfs:label "annotator's note applying Costa v ENEL and Simmenthal" .
+ex:primacyDetermination a lof:ODP006_0001001 ;                 # a reading: not legal content
+  rdfs:label "annotator: the ordinance yields to Article 9(1) by the primacy of EU law" ;
+  lof:ODP006_0001106 ex:gdprArt9_1 ; lof:ODP006_0001107 ex:ordinance ;
+  lof:ODP006_0001108 lof:ODP006_0001503 ;                      # primacy of EU law
+  lof:ODP006_0001110 ex:annotation .
+
+ex:court a obo:BFO_0000040 ; rdfs:label "Example Administrative Court (hypothetical)" .
+ex:judgment a lof:ODP001_0001001 ; rdfs:label "judgment of the Example Administrative Court (hypothetical)" .
+ex:courtDetermination a lof:ODP006_0001001 , lof:ODP001_0001001 ;   # legal content: authoritative
+  rdfs:label "holding: the ordinance is disapplied as contrary to Article 9(1)" ;
+  lof:ODP006_0001106 ex:gdprArt9_1 ; lof:ODP006_0001107 ex:ordinance ;
+  lof:ODP006_0001108 lof:ODP006_0001503 ;
+  lof:ODP006_0001110 ex:judgment .
+
+## Deliberate defects for the SHACL report (hypothetical provisions)
+
+ex:ruleA a lof:ODP001_0001001 ; rdfs:label "provision A (hypothetical)" .
+ex:ruleB a lof:ODP001_0001001 ; rdfs:label "provision B (hypothetical)" .
+ex:ruleC a lof:ODP001_0001001 ; rdfs:label "provision C (hypothetical)" .
+ex:ruleD a lof:ODP001_0001001 ; rdfs:label "provision D (hypothetical)" .
+ex:holder a obo:BFO_0000040 ; rdfs:label "an addressee (hypothetical)" .
+
+# 1. An unresolved conflict: A and B ground conflicting duties, and nothing
+#    says which prevails.
+ex:dutyA a lof:ODP003_0001002 ; rdfs:label "duty under provision A" ;
+  lof:ODP003_0001100 ex:holder ; lof:ODP003_0001101 ex:ruleA ; lof:ODP006_0001104 ex:dutyB .
+ex:dutyB a lof:ODP003_0001002 ; rdfs:label "duty under provision B" ;
+  lof:ODP003_0001100 ex:holder ; lof:ODP003_0001101 ex:ruleB .
+
+# 2. A contested conflict: two readings disagree on whether C or D prevails.
+ex:dutyC a lof:ODP003_0001002 ; rdfs:label "duty under provision C" ;
+  lof:ODP003_0001100 ex:holder ; lof:ODP003_0001101 ex:ruleC ; lof:ODP006_0001104 ex:dutyD .
+ex:dutyD a lof:ODP003_0001002 ; rdfs:label "duty under provision D" ;
+  lof:ODP003_0001100 ex:holder ; lof:ODP003_0001101 ex:ruleD .
+ex:readingOne a lof:ODP006_0001001 ; rdfs:label "first reading: C prevails over D" ;
+  lof:ODP006_0001106 ex:ruleC ; lof:ODP006_0001107 ex:ruleD ; lof:ODP006_0001108 lof:ODP006_0001502 .
+ex:readingTwo a lof:ODP006_0001001 ; rdfs:label "second reading: D prevails over C" ;
+  lof:ODP006_0001106 ex:ruleD ; lof:ODP006_0001107 ex:ruleC ; lof:ODP006_0001108 lof:ODP006_0001501 .

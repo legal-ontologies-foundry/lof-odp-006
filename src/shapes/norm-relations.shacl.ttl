@@ -1,0 +1,71 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix lof: <https://w3id.org/lof/> .
+@prefix n: <https://w3id.org/lof/odp-006/shapes#> .
+
+# LOF-ODP-006 shapes. Run against a REASONED data graph: content conflict,
+# 'held to prevail over' and 'prevails over' are inferred. None of these
+# findings is an error in the data: the law may leave a conflict open, and
+# legal orders may disagree. The report is the input to any diagnostic ontology
+# of legal contradiction (LOF-P-008, LOF-P-009).
+
+n:UnresolvedConflict a sh:NodeShape ;
+  sh:targetSubjectsOf lof:ODP006_0001105 ;
+  sh:severity sh:Warning ;
+  sh:sparql [
+    sh:message "Unresolved conflict: {?otherLabel} conflicts with this content, and no determination states which prevails." ;
+    sh:select """
+      PREFIX lof: <https://w3id.org/lof/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      SELECT $this ?other ?otherLabel WHERE {
+        $this lof:ODP006_0001105 ?other .
+        OPTIONAL { ?other rdfs:label ?otherLabel }
+        FILTER NOT EXISTS { $this lof:ODP006_0001109 ?other }
+        FILTER NOT EXISTS { ?other lof:ODP006_0001109 $this }
+      }""" ] .
+
+n:ResolvedWithoutForce a sh:NodeShape ;
+  sh:targetSubjectsOf lof:ODP006_0001105 ;
+  sh:severity sh:Info ;
+  sh:sparql [
+    sh:message "The conflict with {?otherLabel} is resolved only by determinations without legal force (guidance, scholarship, or annotation)." ;
+    sh:select """
+      PREFIX lof: <https://w3id.org/lof/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      SELECT $this ?other ?otherLabel WHERE {
+        $this lof:ODP006_0001105 ?other .
+        OPTIONAL { ?other rdfs:label ?otherLabel }
+        FILTER EXISTS { { $this lof:ODP006_0001109 ?other } UNION { ?other lof:ODP006_0001109 $this } }
+        FILTER NOT EXISTS { $this lof:ODP006_0001113 ?other }
+        FILTER NOT EXISTS { ?other lof:ODP006_0001113 $this }
+        FILTER NOT EXISTS { $this lof:ODP006_0001109 ?other . ?other lof:ODP006_0001109 $this }
+      }""" ] .
+
+n:ContestedPrecedence a sh:NodeShape ;
+  sh:targetSubjectsOf lof:ODP006_0001109 ;
+  sh:severity sh:Warning ;
+  sh:sparql [
+    sh:message "Contested precedence: this content and {?otherLabel} are each held to prevail over the other ({?force})." ;
+    sh:select """
+      PREFIX lof: <https://w3id.org/lof/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      SELECT $this ?other ?otherLabel ?force WHERE {
+        $this lof:ODP006_0001109 ?other . ?other lof:ODP006_0001109 $this .
+        FILTER($this != ?other)
+        OPTIONAL { ?other rdfs:label ?otherLabel }
+        BIND(IF(EXISTS { $this lof:ODP006_0001113 ?other } && EXISTS { ?other lof:ODP006_0001113 $this },
+                "both holdings have legal force", "at least one is a reading without legal force") AS ?force)
+      }""" ] .
+
+n:Determination a sh:NodeShape ;
+  sh:targetClass lof:ODP006_0001001 ;
+  sh:property [ sh:path lof:ODP006_0001106 ; sh:minCount 1 ; sh:maxCount 1 ;
+    sh:message "A precedence determination must favour exactly one item of legal content." ] ;
+  sh:property [ sh:path lof:ODP006_0001107 ; sh:minCount 1 ; sh:maxCount 1 ;
+    sh:message "A precedence determination must disfavour exactly one item of legal content." ] ;
+  sh:property [ sh:path lof:ODP006_0001106 ; sh:disjoint lof:ODP006_0001107 ;
+    sh:message "A precedence determination favours and disfavours the same content." ] ;
+  sh:property [ sh:path lof:ODP006_0001108 ; sh:minCount 1 ; sh:severity sh:Warning ;
+    sh:message "A precedence determination names no priority principle." ] ;
+  sh:property [ sh:path lof:ODP006_0001110 ; sh:minCount 1 ; sh:severity sh:Warning ;
+    sh:message "A precedence determination does not say where it is stated." ] .

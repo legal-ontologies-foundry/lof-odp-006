@@ -1,0 +1,12 @@
+# CQ1. Which provisions particularize, derogate from, or create exceptions to
+# which, and under what content was the act containing it enacted? (LOF-ODP-001
+# records 'performed under' for the enactment of the act as a whole.)
+PREFIX lof: <https://w3id.org/lof/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?provision ?relation ?target (GROUP_CONCAT(DISTINCT ?auth; separator="; ") AS ?actEnactedUnder) WHERE {
+  VALUES (?p ?relation) { (lof:ODP006_0001100 "particularizes") (lof:ODP006_0001101 "derogates from")
+                          (lof:ODP006_0001102 "substitutes for") (lof:ODP006_0001103 "creates exception to") }
+  ?a ?p ?b . ?a rdfs:label ?provision . ?b rdfs:label ?target .
+  FILTER(?p != lof:ODP006_0001101 || NOT EXISTS { ?a lof:ODP006_0001102|lof:ODP006_0001103 ?b })
+  OPTIONAL { ?e lof:ODP001_0001100 ?a ; lof:ODP001_0001102/rdfs:label ?auth }
+} GROUP BY ?provision ?relation ?target ORDER BY ?provision

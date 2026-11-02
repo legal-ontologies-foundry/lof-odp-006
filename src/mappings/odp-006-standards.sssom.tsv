@@ -1,0 +1,22 @@
+# curie_map:
+#   lof: https://w3id.org/lof/
+#   eli: http://data.europa.eu/eli/ontology#
+#   akn: http://docs.oasis-open.org/legaldocml/ns/akn/3.0/
+#   time: http://www.w3.org/2006/time#
+#   lomo: http://data.europa.eu/leg/lomo#
+#   lrml: http://docs.oasis-open.org/legalruleml/ns/v1.0/
+#   skos: http://www.w3.org/2004/02/skos/core#
+#   semapv: https://w3id.org/semapv/vocab/
+# mapping_set_id: https://w3id.org/lof/odp-006/mappings/odp-006-standards.sssom.tsv
+# mapping_set_description: Alignment of LOF-ODP-006 with legal and temporal standards (LOF-P-015). Draft for review.
+# license: https://creativecommons.org/licenses/by/4.0/
+# creator_label: David R. Koepsell
+# mapping_date: 2026-11-02
+# comment: Akoma Ntoso terms are XML elements and attribute values, not RDF terms; their CURIEs name the element for reference only.
+subject_id	subject_label	predicate_id	object_id	object_label	mapping_justification	comment
+lof:ODP006_0001100	particularizes	skos:closeMatch	lomo:specifies	specifies	semapv:ManualMappingCuration	LOMO: Legal Ontology for Modelling Obligations.
+lof:ODP006_0001101	derogates from	skos:closeMatch	lomo:derogatesFrom	derogates from	semapv:ManualMappingCuration	LOMO distinguishes substitutive and blocking derogation in its documentation only, with no properties for them.
+lof:ODP006_0001101	derogates from	skos:relatedMatch	akn:scopeMod	scope modification	semapv:ManualMappingCuration	
+lof:ODP006_0001103	creates exception to	skos:closeMatch	akn:exceptionOfScope	exception of scope	semapv:ManualMappingCuration	
+lof:ODP006_0001109	held to prevail over	skos:relatedMatch	lrml:Override	override	semapv:ManualMappingCuration	LegalRuleML states priority among rules at the type level, for a defeasible reasoner.
+lof:ODP006_0001113	prevails over	skos:closeMatch	lrml:Override	override	semapv:ManualMappingCuration	lrml:over and lrml:under correspond to favours and disfavours.

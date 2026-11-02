@@ -1,0 +1,9 @@
+# CQ2. Which items of legal content conflict, through which positions, held by whom?
+PREFIX lof: <https://w3id.org/lof/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?content ?otherContent ?position ?otherPosition ?holder WHERE {
+  ?p lof:ODP006_0001104 ?q . ?p rdfs:label ?position . ?q rdfs:label ?otherPosition .
+  ?p lof:ODP003_0001101/rdfs:label ?content . ?q lof:ODP003_0001101/rdfs:label ?otherContent .
+  OPTIONAL { ?p lof:ODP003_0001100/rdfs:label ?holder }
+  FILTER(STR(?p) < STR(?q))
+} ORDER BY ?content

@@ -1,0 +1,10 @@
+# CQ3. For each determination: which content prevails, on what ground,
+# according to whom, and does the determination have legal force?
+PREFIX lof: <https://w3id.org/lof/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?prevails ?yields ?ground ?statedIn ?legalForce WHERE {
+  ?d a lof:ODP006_0001001 ; lof:ODP006_0001106/rdfs:label ?prevails ; lof:ODP006_0001107/rdfs:label ?yields .
+  OPTIONAL { ?d lof:ODP006_0001108/rdfs:label ?ground }
+  OPTIONAL { ?d lof:ODP006_0001110/rdfs:label ?statedIn }
+  BIND(IF(EXISTS { ?d a lof:ODP006_0001002 }, "yes", "no") AS ?legalForce)
+} ORDER BY ?prevails ?legalForce
