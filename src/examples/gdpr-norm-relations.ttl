@@ -89,7 +89,7 @@ ex:edpbDetermination a lof:ODP006_0001001 ;                    # guidance, not l
   lof:ODP006_0001108 lof:ODP006_0001501 ;
   lof:ODP006_0001110 ex:edpbOpinion .
 
-## Conflict 2 (primacy of EU law): a municipal ordinance against Article 9(1).
+## Conflict 2 (primacy of an overriding legal order, here EU law over national law): a municipal ordinance against Article 9(1).
 ## An annotator's reading, then a court's authoritative holding.
 
 ex:municipality a obo:BFO_0000040 ; rdfs:label "Example Municipality (hypothetical)" .
@@ -115,7 +115,7 @@ ex:annotation a obo:BFO_0000031 ; rdfs:label "annotator's note applying Costa v 
 ex:primacyDetermination a lof:ODP006_0001001 ;                 # a reading: not legal content
   rdfs:label "annotator: the ordinance yields to Article 9(1) by the primacy of EU law" ;
   lof:ODP006_0001106 ex:gdprArt9_1 ; lof:ODP006_0001107 ex:ordinance ;
-  lof:ODP006_0001108 lof:ODP006_0001503 ;                      # primacy of EU law
+  lof:ODP006_0001108 lof:ODP006_0001503 ;                      # primacy of an overriding legal order (EU law)
   lof:ODP006_0001110 ex:annotation .
 
 ex:court a obo:BFO_0000040 ; rdfs:label "Example Administrative Court (hypothetical)" .
