@@ -8,7 +8,7 @@ derogation, substitutive or blocking, with its authorization recorded through
 LOF-ODP-001 *performed under*; conflict between the legal positions they
 ground, lifted to the content; and precedence determinations stating, on
 grounds such as lex superior, lex specialis, lex posterior, or the primacy of
-EU law, which content prevails and according to whom. Any determination makes
+an overriding legal order (EU law, federal law), which content prevails and according to whom. Any determination makes
 content *held to prevail over* other content; only a determination that is
 itself legal content makes it *prevail over* it. SHACL shapes report
 unresolved, contested, and unauthoritatively resolved conflicts.
