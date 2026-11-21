@@ -3,6 +3,13 @@
 All notable changes are recorded here. Versions follow semantic versioning
 (LOF-P-006).
 
+## [Unreleased] - proposed for 0.3.0
+
+### Added
+
+- Non-derogable content (jus cogens and similar), as a separate module.
+- Tested with the cross-regime test suite (14 legal regimes, 85 competency questions) on the released 0.2.0 patterns: all pass.
+
 ## [Unreleased]
 
 - Generalized priority principle `ODP006_0001503` from *primacy of European

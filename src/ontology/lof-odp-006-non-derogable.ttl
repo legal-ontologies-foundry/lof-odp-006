@@ -1,0 +1,13 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix lof: <https://w3id.org/lof/> .
+# PROPOSED ADDITION to LOF-ODP-006, from the regime test suite.
+<https://w3id.org/lof/odp-006/proposed/non-derogable.ttl> a owl:Ontology .
+lof:ODP006_0001003 a owl:Class ;
+  rdfs:label "non-derogable content"@en ;
+  skos:definition "Legal content from which no legal content derogates."@en ;
+  rdfs:comment "Peremptory norms of international law (jus cogens, VCLT Art. 53), non-derogable rights (ECHR Art. 15(2), ICCPR Art. 4(2)), and entrenched constitutional provisions. Recording a derogation from such content makes a knowledge base inconsistent, which is the point: the law says the derogation is void. Added because the regime test suite (international law) could not otherwise state that a norm is peremptory."@en ;
+  skos:altLabel "peremptory norm"@en ; skos:altLabel "jus cogens"@en ;
+  rdfs:subClassOf lof:ODP001_0001001 ,
+    [ a owl:Class ; owl:complementOf [ a owl:Restriction ; owl:onProperty [ owl:inverseOf lof:ODP006_0001101 ] ; owl:someValuesFrom owl:Thing ] ] .
